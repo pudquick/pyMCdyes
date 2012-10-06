@@ -10,6 +10,8 @@ Then simply type this to start exploring colors: python pymcdyes.py
 ##For Developers
 There are some basic functions in the script and you're more than welcome to use the dataset contained within the .zip file. Unfortunately the pyMCdyes script generates, at load, a portion of the information necessary to decode the dataset (base_mods and base_colors). I would distribute those as well, but it would easily (even compressed) triple the download size of this project. If you have questions about the technical nature of the dataset / how I did this, feel free to contact me via github or r/minecraft.
 
+(If you do decide to use all or a portion of my work elsewhere, I would appreciate a credit with my name.)
+
 ##Credits
 
 - pyMCdyes is written by pudquick@github 
