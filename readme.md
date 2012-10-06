@@ -1,6 +1,6 @@
 #pyMCdyes - An interactive python script that lets you explore 4 million+ leather dye recipes for Minecraft - instantly.
 
-pyMCdyes is an interactive python script for exploring just slightly more than 4 million pre-calculated dye color recipes for dyeing leather armor in Minecraft. For more information about why I believe this to be 99.99999%+ of the possible colors you can reach, please visit: http://pudquick.github.com/
+pyMCdyes is an interactive python script for exploring just slightly more than 4 million pre-calculated dye color recipes for dyeing leather armor in Minecraft. For more information about why I believe this to be 99.99999%+ of the possible colors you can reach, please visit: http://pudquick.github.com/pyMCdyes/
 
 ##How to Use
 Assuming you have python 2.6.x-2.7.x (haven't tested it with 3.x), download the script and the associated .zip file and place them in the same directory.
