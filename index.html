@@ -133,9 +133,60 @@
 
 <p>... Yes, I have the recipes. All 4,001,584 of the ones I've found so far. Want them?</p>
 
-<p>If you've got python installed on your computer, check out <a href="http://github.com/pudquick/pyMCdyes/">my pyMCdyes tool</a> and give it a whirl. It's an interactive tool I've written to instantly show you a set of steps and dyes (not guaranteed to be the most efficient, just guaranteed to work) that you can use to get the color you want.</p>
+<p>If you've got python (2.6+, haven't tested on 3.x) installed on your computer, check out <a href="http://github.com/pudquick/pyMCdyes/">my pyMCdyes tool</a> and give it a whirl. It's an interactive tool I've written to instantly show you a set of steps and dyes (not guaranteed to be the most efficient, just guaranteed to work) that you can use to get the color you want.</p>
 
 <p>Enjoy! </p>
+
+<pre><code>$ python pymcdyes.py
+Loading color map (FAST) ...
+... Done!
+Generating map key (SLOW - takes a minute) ...
+... Level 8 of 8 ...
+... Level 7 of 8 ...
+... Level 6 of 8 ...
+... Level 5 of 8 ...
+... Level 4 of 8 ...
+... Level 3 of 8 ...
+... Level 2 of 8 ...
+... Level 1 of 8 ...
+... Sorting ...
+... Done!
+[4,001,584 color recipes loaded]
+
+[Enter RRGGBB hex color to find or Q to quit]: C6C6C6
+
+Goal color: #C6C6C6 - col(r=198, g=198, b=198)
+Checking ...
+... FOUND!
+
+(Apply these dye sets, in order, starting with a new leather item!)
+
+Recipe for color:
+-----------------
+- [Bone Meal+Bone Meal+Bone Meal+Gray Dye+Light Gray]
+
+Recipe Verified: GOOD
+
+[Enter RRGGBB hex color to find or Q to quit]: ABC123
+
+Goal color: #ABC123 - col(r=171, g=193, b=35)
+Checking ...
+... FOUND!
+
+(Apply these dye sets, in order, starting with a new leather item!)
+
+Recipe for color:
+-----------------
+- [Ink Sac+Dandelion Yellow+Dandelion Yellow+Dandelion Yellow]
+- [Lime Dye+Orange Dye+Orange Dye]
+- [Lime Dye+Orange Dye]
+- [Orange Dye]
+- [Lime Dye]
+
+Recipe Verified: GOOD
+
+[Enter RRGGBB hex color to find or Q to quit]: Q
+</code></pre>
       </section>
 
     </div>
