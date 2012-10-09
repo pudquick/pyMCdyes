@@ -32,82 +32,84 @@
       <section>
         <div id="title">
           <h1>pyMCdyes</h1>
-          <p>Explore 4 million+ leather dye recipes for Minecraft - instantly!</p>
+          <p>Explore 4 million+ leather dye recipes for Minecraft</p>
           <hr>
           <span class="credits left">Project maintained by <a href="https://github.com/pudquick">pudquick</a></span>
           <span class="credits right">Hosted on GitHub Pages</span>
         </div>
 
-        <h2>The Definitive Study (So Far) of Dyeing Leather Armor</h2>
+        <h2>The In-Depth Study of Leather Dyeing</h2><br/>
 
-<p>As most regular <a href="http://www.minecraft.net/">Minecraft</a> players know by now, as of development build 12w34a, Minecraft includes the <a href="http://www.minecraftwiki.net/wiki/Armor#Dyeing">ability to dye leather armor</a> using the <a href="http://www.minecraftwiki.net/wiki/Wool_dyes#Data_values">16 different dyes</a> that were already present in the game.</p>
+<p>As of development build 12w34a, <a href="http://www.minecraft.net/">Minecraft</a> includes the <a href="http://www.minecraftwiki.net/wiki/Armor#Dyeing">ability to dye leather armor</a> using the <a href="http://www.minecraftwiki.net/wiki/Wool_dyes#Data_values">16 different dyes</a> that were already present in the game.</p>
 
 <p>The color your armor receives is calculated as an average of the RGB color values of the dyes you apply in the crafting grid.</p>
 
 <p>For example, the following combination:</p>
 
 <ul>
-<li>Leather boots (newly made) +</li>
-<li>Cactus Green dye: #667F33 (Red: 102, Green: 127, Blue: 51) +</li>
-<li>Cocoa Beans dye: #7F664C (Red: 127, Green: 102, Blue: 76)</li>
-</ul><p>... results in greenish-brown boots with a color of: #72723F (Red: 114, Green: 114, Blue: 63)</p>
+<li>Leather boots (newly made, undyed) +</li>
+<li>Cactus Green dye: <span style="color: #667F33">#667F33</span> (Red: <span style="color: red">102</span>, Green: <span style="color: green">127</span>, Blue: <span style="color: blue">51</span>) +</li>
+<li>Cocoa Beans dye: <span style="color: #7F664C">#7F664C</span> (Red: <span style="color: red">127</span>, Green: <span style="color: green">102</span>, Blue: <span style="color: blue">76</span>)</li>
+</ul><p>... results in greenish-brown boots with a color of: <span style="color: #72723F">#72723F</span> (Red: <span style="color: red">114</span>, Green: <span style="color: green">114</span>, Blue: <span style="color: blue">63</span>)</p><br/>
 
-<p>This is the math used to figure that out (averaging the two colors):</p>
+<h3>The Math Bit</h3>
+
+<p>The average color above is the sum of the colors, divided by the number of colors:</p>
 
 <ul>
-<li>Red: (102 + 127) ÷ 2 = 114.5 (rounded down to the nearest integer: 114)</li>
-<li>Green: (102 + 127) ÷ 2 = 114.5 (rounded down to the nearest integer: 114)</li>
-<li>Blue: (51 + 76) ÷ 2 = 63.5 (rounded down to the nearest integer: 63)</li>
-</ul><p>Armor that has been dyed already can also be re-dyed - with its current color becoming part of the average. When you're calculating in this situation, the current color of the item acts just like an additional dye item in the crafting grid.</p>
+<li>Red: <span style="color: red">(102 + 127)</span> ÷ 2 = <span style="color: red">114.5</span> (rounded down to the nearest integer: <span style="color: red">114</span>)</li>
+<li>Green: <span style="color: green">(102 + 127)</span> ÷ 2 = <span style="color: green">114.5</span> (rounded down to the nearest integer: <span style="color: green">114</span>)</li>
+<li>Blue: <span style="color: blue">(51 + 76)</span> ÷ 2 = <span style="color: blue">63.5</span> (rounded down to the nearest integer: <span style="color: blue">63</span>)</li>
+</ul><p>Armor that has been dyed already can also be re-dyed - <u>with its current color becoming part of the average</u>. The color of the armor acts like an additional dye placed into the crafting grid.</p>
 
 <p>Take this example:</p>
 
 <ul>
-<li>Leather boots (greenish-brown): #72723F (Red: 114, Green: 114, Blue: 63) +</li>
-<li>Rose Red dye: #CC4C4C (Red: 204, Green: 76, Blue: 76) +</li>
-<li>Bone Meal dye: #FFFFFF (Red: 255, Green: 255, Blue: 255) +</li>
-<li>Bone Meal dye: #FFFFFF (Red: 255, Green: 255, Blue: 255)</li>
-</ul><p>which gives us this math (averaging 4 colors):</p>
+<li>Leather boots (greenish-brown): <span style="color: #72723F">#72723F</span> (Red: <span style="color: red">114</span>, Green: <span style="color: green">114</span>, Blue: <span style="color: blue">63</span>) +</li>
+<li>Rose Red dye: <span style="color: #CC4C4C">#CC4C4C</span> (Red: <span style="color: red">204</span>, Green: <span style="color: green">76</span>, Blue: <span style="color: blue">76</span>) +</li>
+<li>Bone Meal dye: <span style="color: #FFFFFF">#FFFFFF</span> (Red: <span style="color: red">255</span>, Green: <span style="color: green">255</span>, Blue: <span style="color: blue">255</span>) +</li>
+<li>Bone Meal dye: <span style="color: #FFFFFF">#FFFFFF</span> (Red: <span style="color: red">255</span>, Green: <span style="color: green">255</span>, Blue: <span style="color: blue">255</span>)</li>
+</ul><p>which gives us this math (averaging 4 colors - 3 dyes + the armor's old color):</p>
 
 <ul>
-<li>Red: (114 + 204 + 255 + 255) ÷ 4 = 207</li>
-<li>Green: (114 + 76 + 255 + 255) ÷ 4 = 175</li>
-<li>Blue: (63 + 76 + 255 + 255) ÷ 4 = 162.25 (rounded down to the nearest integer: 162)</li>
-</ul><p>... which results in our new <a href="http://www.colblindor.com/color-name-hue/">"Clam shell"</a> color boots: #CFAFA2 (Red: 207, Green: 175, Blue: 162)</p>
+<li>Red: <span style="color: red">(114 + 204 + 255 + 255)</span> ÷ 4 = <span style="color: red">207</span></li>
+<li>Green: <span style="color: green">(114 + 76 + 255 + 255)</span> ÷ 4 = <span style="color: green">175</span></li>
+<li>Blue: <span style="color: blue">(63 + 76 + 255 + 255)</span> ÷ 4 = <span style="color: blue">162.25</span> (rounded down to the nearest integer: <span style="color: blue">162</span>)</li>
+</ul><p>... which results in our new "Clam shell"</a> color boots: <span style="color: #CFAFA2">#CFAFA2</span> (Red: <span style="color: red">207</span>, Green: <span style="color: green">175</span>, Blue: <span style="color: blue">162</span>)</p><br/>
 
-<h3>Dream of Available Colors</h3>
+<h3>The Dream of Available Colors</h3>
 
-<p>If every RGB combination were possible (values of 0 to 255 for R/G/B), there would be 16,777,216 possible dyed leather armor colors. </p>
+<p><u>If every RGB combination were possible with dyeing</u> (reachable values of 0 to 255 for R/G/B), there would be <strong>16,777,216 possible</strong> (256*256*256) dyed leather armor colors. </p>
 
-<p>However, when you average colors, you can't end up with an R/G/B lower (or greater) than the colors you put into it. While Bone Meal dye is able to provide us with the high value of 255 for R/G/B, the darkest dye we have available to us is Ink Sac dye (#191919 - Red: 25, Green: 25, Blue: 25).</p>
+<p>However, when you average colors, you can't end up with an R/G/B lower (or greater) than the colors you put into it. While Bone Meal dye is able to provide us with the high value of 255 for R/G/B, the darkest dye we have available to us is Ink Sac dye (#191919 - Red: <span style="color: red">25</span>, Green: <span style="color: green">25</span>, Blue: <span style="color: blue">25</span>).</p>
 
-<p>It would appear we're now limited to 12,326,391 possible colors (using values of 25 to 255 for R/G/B) ... <em>if we stopped there</em>.</p>
+<p>With a range of values now only from 25 to 255, it would appear we're reduced to 12,326,391 possible (231*231*231) colors ... <em>if we ignored the other limits</em>.</p><br/>
 
-<h3>Theory of Available Colors</h3>
+<h3>The Theory of Available Colors</h3>
 
 <p>It might be more useful to think of applying a dye color to an item as slowly "pulling" the color of the item towards the dye color. Repeatedly applying the same color of dye over and over again will pull it closer and closer to the actual dye color until, finally, they end up the same.</p>
 
-<p>When you apply two different colors, you slowly pull the item towards a color that's equally distant from the two dyes. If you were to draw a line between those two colors in 3D <a href="http://en.wikipedia.org/wiki/RGB_color_space">RGB colorspace</a>, you'd be pulling your item to a point that lies exactly 50% of the way between the two dyes.</p>
+<p>When you apply two different colors, you slowly pull the item towards a color that's equally distant from the two dyes you're applying. If you were to draw a line between those two colors in 3D <a href="http://en.wikipedia.org/wiki/RGB_color_space">RGB color space</a>, you'd be pulling your item to a point that lies exactly 50% of the way between the two dyes.</p>
 
 <p><strong>Now expand that idea.</strong></p>
 
-<p>Plot out all 16 of the dye colors in RGB colorspace. Draw the 15 lines from each point to every other point. It'll look like a Hell's own cat's cradle, but you'll end up with a shape. It'll be a shape with 12 outer points (as the colors for Gray Dye, Light Gray Dye, Cocoa Beans dye, and Cactus Green dye will be contained deep within the shape).</p>
+<p>Plot out all 16 of the dye colors in RGB color space. Draw the 15 lines from each point to every other point. It'll look like a mess, <u>but you'll end up with a shape</u>. It'll be a shape with 12 outer points (as the colors for Gray Dye, Light Gray Dye, Cocoa Beans dye, and Cactus Green dye will be contained deep within the shape).</p>
+
+<p><center><a href="images/views.png"><img src="images/views_thumb.png"/></a><br/>(Yes, I did chart this out in Minecraft as a level - available if interested)</center></p>
 
 <p>This shape defines (mostly)* every single <strong>TRULY POSSIBLE</strong> color.</p>
 
 <p>Think of the shape as all the possible points you could pull a leather armor item's color towards. Applying a combination of dyes? Then you're only pulling it towards a point somewhere in-between the individual dyes (deeper within the shape). The 12 outer points represent the farthest you can pull an item's color in any individual direction. </p>
 
-<p>The number of RGB points that are contained by this shape?</p>
+<p>The number of RGB points that are contained by this shape? &nbsp;&nbsp;&nbsp;<strong>3,894,778</strong></p>
 
-<p><strong>3,894,778</strong></p>
+<p>... That's a hell of a lot less than the 12.3 million we estimated above!</p>
 
-<p>That's a hell of a lot less than the "12.3 million" we estimated above.</p>
+<p>(and sadly none of those colors are anywhere near the color of diamond armor, sorry PvPers!)</p><br/>
 
-<p>And sadly none of those colors are anywhere near the color of diamond armor (sorry guys).</p>
+<h3>The Reality of Available Colors</h3>
 
-<h3>Reality of Available Colors</h3>
-
-<p>... You may have noticed I said "(mostly)*" above.</p>
+<p>You may have noticed I said "(mostly)*" above.</p>
 
 <p>That's because of that "rounded down to the nearest integer" bit involved with figuring out the new average color.</p>
 
@@ -115,21 +117,21 @@
 
 <p>For example:</p>
 
-<p>If you take Ink Sac dye - #191919 (Red: 25, Green: 25, Blue: 25) and averaged it with Lapis Lazuli dye - #3366CC (Red:  51, Green: 102, Blue: 204), your average color of the 2 comes out as:</p>
+<p>If you take Ink Sac dye - #191919 (Red: <span style="color: red">25</span>, Green: <span style="color: green">25</span>, Blue: <span style="color: blue">25</span>) and averaged it with Lapis Lazuli dye - <span style="color: #3366CC">#3366CC</span> (Red: <span style="color: red">51</span>, Green: <span style="color: green">102</span>, Blue: <span style="color: blue">204</span>), your average color of the 2 comes out as:</p>
 
 <ul>
-<li>Red: (25 + 51) ÷ 2 = 38</li>
-<li>Green: (25 + 102) ÷ 2 = 63.5 (rounded down to the nearest integer: 63)</li>
-<li>Blue: (25 + 204) ÷ 2 = 114.5 (rounded down to the nearest integer: 114)</li>
-</ul><p>... a dark <a href="http://www.colblindor.com/color-name-hue/">"Venice Blue"</a> color of #263F72 (Red: 38, Green: 63, Blue: 114).</p>
+<li>Red: <span style="color: red">(25 + 51)</span> ÷ 2 = <span style="color: red">38</span></li>
+<li>Green: <span style="color: green">(25 + 102)</span> ÷ 2 = <span style="color: green">63.5</span> (rounded down to the nearest integer: <span style="color: green">63</span>)</li>
+<li>Blue: <span style="color: blue">(25 + 204)</span> ÷ 2 = <span style="color: blue">114.5</span> (rounded down to the nearest integer: <span style="color: blue">114</span>)</li>
+</ul><p>... a dark "Venice Blue"</a> color of <span style="color: #263F72">#263F72</span> (Red: <span style="color: red">38</span>, Green: <span style="color: green">63</span>, Blue: <span style="color: blue">114</span>).</p>
 
-<p>This color does NOT fall within our 12 pointed shape - because the "true" average contained in the shape is "(Red: 38, Green: 63.5, Blue: 114.5)". Those 0.5 point differences in Green and Blue are the difference between being inside and being outside our "TRULY POSSIBLE" color boundary.</p>
+<p><u>This color does NOT fall within our 12 pointed shape</u> - because the true average is what's contained in the shape: Red: <span style="color: red">38</span>, Green: <span style="color: green">63.5</span>, Blue: <span style="color: blue">114.5</span>. Those 0.5 point differences in Green and Blue are the difference between being inside and being outside our "all possible" color boundary.</p>
 
-<p>As a result of this, the FACTUALLY POSSIBLE colors leak a bit beyond that 12 pointed shape.</p>
+<p>As a result of this, the FACTUALLY POSSIBLE colors "leak" a bit beyond that 12 pointed shape.</p>
 
 <p>... They leak enough that, so far, I've found the recipes for a total of 4,001,584 colors.</p>
 
-<p>... Yes, I have the recipes. All 4,001,584 of the ones I've found so far.</p>
+<p>... Yes, I have the recipes. All 4,001,584 of the ones I've found so far. Want them?</p>
 
 <p>If you've got python installed on your computer, check out <a href="http://github.com/pudquick/pyMCdyes/">my pyMCdyes tool</a> and give it a whirl. It's an interactive tool I've written to instantly show you a set of steps and dyes (not guaranteed to be the most efficient, just guaranteed to work) that you can use to get the color you want.</p>
 
