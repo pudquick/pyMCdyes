@@ -1,4 +1,4 @@
-import zipfile, sys
+import zipfile, sys, os.path, exceptions, time
 from collections import namedtuple
 from itertools import imap
 col = namedtuple('col', 'r g b')
@@ -53,6 +53,7 @@ dyes = {hc('#191919'): 'Ink Sac',
         hc('#FFFFFF'): 'Bone Meal'}
 
 def init_bases(dye_dict):
+    start = time.time()
     new_colors, new_mods = dict(), [dict() for x in range(9)]
     print "Generating map key (SLOW - takes a minute) ..."
     for count in range(8,0,-1):
@@ -66,8 +67,60 @@ def init_bases(dye_dict):
     print "... Sorting ..."
     for count in range(9):
         new_mods[count] = tuple(sorted(new_mods[count].items(), key=lambda x: x[0]))
+    new_colors = tuple(sorted(new_colors.items(), key=lambda x: x[0]))
     print "... Done!"
-    return [tuple(sorted(new_colors.items(), key=lambda x: x[0])), new_mods]
+    stop = time.time()
+    # Offer to save time by caching
+    print "NOTE: This process took %0.2f seconds to complete." % (stop - start)
+    print "For the cost of ~95MB of storage, would you like to cache these results?"
+    print "(Average speedup time for loading cached results: 5x times faster - or more!)"
+    response = raw_input("[N/y]: ").strip().lower()
+    if (response in ["yes", "y"]):
+        print "Saving base_colors.cache ..."
+        f = open('base_colors.cache','wb')
+        for x_c, x_n in new_colors:
+            f.write("%s\t%s\t%s\t%s\n" % (x_c.r, x_c.g, x_c.b,x_n))
+        f.close()
+        print "Saving base_mods.cache ..."
+        f = open('base_mods.cache','wb')
+        for i in range(8,0,-1):
+            for x_c, x_n in new_mods[i]:
+                f.write("%s\t%s\t%s\t%s\t%s\n" % (i,x_c.r, x_c.g, x_c.b,x_n))
+        f.close()
+        print "... Done!"
+    else:
+        print "Skipped caching."
+    return [new_colors, new_mods]
+
+def init_cached_bases():
+    print "Reading cached map key (SPEEDY-ISH - takes a few seconds) ..."
+    cached_base_colors = []
+    f = open('base_colors.cache','r')
+    for line in f.xreadlines():
+        r,g,b,n = line.split('\t')
+        cached_base_colors.append((col(int(r),int(g),int(b)), n[:-1]))
+    f.close()
+    cached_base_colors = tuple(cached_base_colors)
+    cached_base_mods = [[] for x in range(9)]
+    f = open('base_mods.cache','r')
+    old_level = ""
+    for line in f.xreadlines():
+        i,r,g,b,n = line.split('\t')
+        if old_level != i:
+            print "... Level %s of 8 ..." % i
+            old_level = i
+        cached_base_mods[int(i)].append((col(int(r),int(g),int(b)), n[:-1]))
+    f.close()
+    for i in range(9):
+        cached_base_mods[i] = tuple(cached_base_mods[i])
+    print "... Validating ..."
+    if (len(cached_base_colors) == 327842) and (len(cached_base_mods[8]) == 414081):
+        print "... Done!"
+        return [cached_base_colors, cached_base_mods]
+    else:
+        print "... ERROR in cache! ... rebuilding ..."
+        raise exceptions.Exception('Cache Mismatch')
+
 
 def init_color_map():
     print "Loading color map (FAST) ..."
@@ -138,7 +191,15 @@ def pprint_ancestry(target_c, DEBUG=False):
 def main():
     global color_map, base_colors, base_mods
     color_map = init_color_map()
-    base_colors, base_mods = init_bases(dyes)
+    if (os.path.exists('base_colors.cache') and os.path.exists('base_mods.cache')):
+        try:
+            # Attempt loading cache
+            base_colors, base_mods = init_cached_bases()
+        except:
+            # Cache mismatch, redo
+            base_colors, base_mods = init_bases(dyes)
+    else:
+        base_colors, base_mods = init_bases(dyes)        
     print "[4,001,584 color recipes loaded]\n"
     while True:
         instr = raw_input("[Enter RRGGBB hex color to find or Q to quit]: ").strip().lower()
