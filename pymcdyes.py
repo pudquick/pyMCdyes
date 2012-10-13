@@ -165,12 +165,176 @@ def verify_ancestry(target_c):
         new_c = avg_color([new_c, dye_set], dye_name.count('+') + 2)
     return (new_c, target_c)
 
+def color_exists(target_c):
+    global color_map
+    if (target_c.r < 25) or (target_c.g < 25) or (target_c.b < 25): return False
+    i = ((target_c.r-25) + (target_c.g-25)*231 + (target_c.b-25)*231*231)*6
+    return bool(color_map[i])
+
+def vector_projection(target_c):
+    scalar = sum(map(lambda x: x*0.57735, target_c))
+    new_coord = min(int(0.57735*scalar+0.5), 255)
+    if new_coord > 24:
+        return col(new_coord,new_coord,new_coord)
+    return None
+
+def dist_3d(target_c, new_c):
+    return int(sum(map(lambda x: (x[1] - x[0])**2,  zip(target_c, new_c)))**0.5 + 1)
+
+def next_pixel_in_3d(source_c, dest_c):
+    x1,y1,z1 = pixel = list(source_c)
+    x2,y2,z2 = dest_c
+    dx,dy,dz = x2-x1, y2-y1, z2-z1
+    x_inc = ((dx < 0) and -1) or 1
+    y_inc = ((dy < 0) and -1) or 1
+    z_inc = ((dz < 0) and -1) or 1
+    l,m,n = abs(dx), abs(dy), abs(dz)
+    dx2,dy2,dz2 = l << 1, m << 1, n << 1
+    if (l >= m) and (l >= n):
+        err_1, err_2 = dy2-l, dz2-l
+        for i in range(l):
+            if (color_exists(col(*pixel))):
+                return col(*pixel)
+            if (err_1 > 0):
+                pixel[1] += y_inc
+                err_1 -= dx2
+            if (err_2 > 0):
+                pixel[2] += z_inc
+                err_2 -= dx2
+            err_1 += dy2
+            err_2 += dz2
+            pixel[0] += x_inc
+    elif (m >= l) and (m >= n):
+        err_1, err_2 = dx2-m, dz2-m
+        for i in range(m):
+            if (color_exists(col(*pixel))):
+                return col(*pixel)
+            if (err_1 > 0):
+                pixel[0] += x_inc
+                err_1 -= dy2
+            if (err_2 > 0):
+                pixel[2] += z_inc
+                err_2 -= dy2
+            err_1 += dx2
+            err_2 += dz2
+            pixel[1] += y_inc
+    else:
+        err_1, err_2 = dy2-n, dx2-n
+        for i in range(n):
+            if (color_exists(col(*pixel))):
+                return col(*pixel)
+            if (err_1 > 0):
+                pixel[1] += y_inc
+                err_1 -= dz2
+            if (err_2 > 0):
+                pixel[0] += x_inc
+                err_2 -= dz2
+            err_1 += dy2
+            err_2 += dx2
+            pixel[2] += z_inc
+    if (color_exists(col(*pixel))):
+        return col(*pixel)
+    return None
+
+def cube_search(target_c, max_dist=255):
+    print "\nSearching for the closest colors in RGB color space ..."
+    r, best_dist, best_cs = 1, 500, []
+    while (r <= max_dist):
+        # search sides in y-axis:
+        for dy in ([0] + [j for i in zip(range(1,r),range(-1,-r,-1)) for j in i]):
+            # This generates a list like [0, 1, -1, 2, -2, ... r-1, -r+1]
+            y_g = target_c.g + dy
+            if 24 < y_g < 256:
+                # side 1 & 2
+                for x_r in [target_c.r + r, target_c.r - r]:
+                    if 24 < x_r < 256:
+                        for z_b in range(target_c.b - r, target_c.b + r + 1):
+                            if 24 < z_b < 256:
+                                t_c = col(x_r, y_g, z_b)
+                                if color_exists(t_c):
+                                    # Found a color, update the max distance range
+                                    t_dist = dist_3d(target_c, t_c)
+                                    if t_dist < best_dist:
+                                        max_dist = min(max_dist, 2*t_dist)
+                                        best_dist = t_dist
+                                        best_cs = [t_c]
+                                    elif t_dist == best_dist:
+                                        best_cs.append(t_c)
+                # side 3 & 4
+                for z_b in [target_c.b + r, target_c.b - r]:
+                    if 24 < z_b < 256:
+                        for x_r in range(target_c.r - r + 1, target_c.r + r):
+                            if 24 < x_r < 256:
+                                t_c = col(x_r, y_g, z_b)
+                                if color_exists(t_c):
+                                    # Found a color, update the max distance range
+                                    t_dist = dist_3d(target_c, t_c)
+                                    if t_dist < best_dist:
+                                        max_dist = min(max_dist, 2*t_dist)
+                                        best_dist = t_dist
+                                        best_cs = [t_c]
+                                    elif t_dist == best_dist:
+                                        best_cs.append(t_c)
+        # search top & bottom in y-axis
+        for y_g in [target_c.g + r, target_c.g - r]:
+            if 24 < y_g < 256:
+                for x_r in range(target_c.r - r, target_c.r + r + 1):
+                    if 24 < x_r < 256:
+                        for z_b in range(target_c.b - r, target_c.b + r + 1):
+                            if 24 < z_b < 256:
+                                t_c = col(x_r, y_g, z_b)
+                                if color_exists(t_c):
+                                    # Found a color, update the max distance range
+                                    t_dist = dist_3d(target_c, t_c)
+                                    if t_dist < best_dist:
+                                        max_dist = min(max_dist, 2*t_dist)
+                                        best_dist = t_dist
+                                        best_cs = [t_c]
+                                    elif t_dist == best_dist:
+                                        best_cs.append(t_c)
+        r += 1
+    if best_cs:
+        return (best_dist, best_cs)
+    return None
+
+def try_offer_alternative(target_c):
+    instr = raw_input("Look for a closest match? [Y/n]: ").strip().lower()
+    if instr not in ['n', 'no', 'quit', 'q']:
+        print "Suggested closest colors:\n-------------------------"
+        max_dist = 256
+        t_c = next_pixel_in_3d(target_c, col(127,127,127))
+        if t_c:
+            print "Towards gray: %s - %s" % (ch(t_c), t_c)
+            max_dist = min(dist_3d(t_c, target_c), max_dist)
+        t_c = next_pixel_in_3d(target_c, col(255,255,255))
+        if t_c:
+            print "Towards white: %s - %s" % (ch(t_c), t_c)
+            max_dist = min(dist_3d(t_c, target_c), max_dist)
+        v_c = vector_projection(target_c)
+        if v_c:
+            t_c = next_pixel_in_3d(target_c, v_c)
+            if t_c:
+                print "Projection mapped to black->white: %s - %s" % (ch(t_c), t_c)
+                max_dist = min(dist_3d(t_c, target_c), max_dist)
+        t_c = next_pixel_in_3d(target_c, col(25,25,25))
+        if t_c:
+            print "Towards black: %s - %s" % (ch(t_c), t_c)
+            max_dist = min(dist_3d(t_c, target_c), max_dist)
+        closest_c = cube_search(target_c, max_dist)
+        if closest_c:
+            c_dist, t_cs = closest_c
+            print "The following", len(t_cs), "closest colors were found at a distance of:", c_dist
+            print ",\n".join([("  " + ", ".join(map(lambda x: "%s - %s" % (ch(x), x), t_cs[i:i+2]))) for i in range(0, len(t_cs), 2)])
+    print ""
+
+
 def pprint_ancestry(target_c, DEBUG=False):
     print "Goal color: %s - %s" % (ch(target_c), target_c)
     print "Checking ..."
     ancestry = get_color_ancestry(target_c)
     if not ancestry:
         print "... Sorry, but this color is not reachable with this map!\n"
+        try_offer_alternative(target_c)
     else:
         print "... FOUND!\n"
         print "(Apply these dye sets, in order, starting with a new leather item!)"
@@ -188,7 +352,7 @@ def pprint_ancestry(target_c, DEBUG=False):
             print "Problem color in question:", target_c
             sys.exit(1)
 
-def main():
+def init_main():
     global color_map, base_colors, base_mods
     color_map = init_color_map()
     if (os.path.exists('base_colors.cache') and os.path.exists('base_mods.cache')):
@@ -201,9 +365,12 @@ def main():
     else:
         base_colors, base_mods = init_bases(dyes)        
     print "[4,001,584 color recipes loaded]\n"
+
+def main():
+    init_main()
     while True:
         instr = raw_input("[Enter RRGGBB hex color to find or Q to quit]: ").strip().lower()
-        if instr == 'q':
+        if instr in ['q','quit','exit']:
             break
         else:
             print
