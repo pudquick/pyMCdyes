@@ -239,6 +239,8 @@ def next_pixel_in_3d(source_c, dest_c):
 def cube_search(target_c, max_dist=255):
     print "\nSearching for the closest colors in RGB color space ..."
     r, best_dist, best_cs = 1, 500, []
+    # double max dist passed
+    max_dist = 2*max_dist
     while (r <= max_dist):
         # search sides in y-axis:
         for dy in ([0] + [j for i in zip(range(1,r),range(-1,-r,-1)) for j in i]):
